@@ -21,15 +21,11 @@
       th {
         background-color: #f9fbff;
       }
-      th:first-child {
-        border-left: none;
-      }
-      th:last-child {
-        border-right: none;
-      }
+      th:first-child,
       td:first-child {
         border-left: none;
       }
+      th:last-child,
       td:last-child {
         border-right: none;
       }
@@ -85,9 +81,18 @@
         background-color: #f7f7f7;
         border-top: 3px double #ddd;
       }
+      hr.separator {
+        border: 0;
+        border-top: 1px dashed rgba(30, 31, 33, 0.2);
+        margin: 1rem 0;
+        clear: both;
+        user-select: none;
+        break-after: page;
+      }
     </style>
   </head>
   <body>
+    <hr class="separator" />
     <div class="toolbar">
       <div class="button-container">
         <div class="header">결의금액 작성기 <strong>(상신 전 삭제!!)</strong></div>
@@ -135,7 +140,8 @@
         </tr>
       </tfoot>
     </table>
-
+    <br />
+    <hr class="separator" />
     <script>
       // 행 추가
       function addRow() {
