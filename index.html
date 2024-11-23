@@ -9,6 +9,8 @@
         width: 100%;
         border-collapse: collapse;
         font-family: Arial, sans-serif;
+        border-left: none;
+        border-right: none;
       }
       th,
       td {
@@ -17,30 +19,64 @@
         text-align: center;
       }
       th {
-        background-color: #f4f4f4;
+        background-color: #f9fbff;
+      }
+      td:first-child {
+        border-left: none;
+      }
+      td:last-child {
+        border-right: none;
       }
       input[type='text'],
       input[type='date'] {
         width: 100%;
         box-sizing: border-box;
         text-align: center;
+        border: 1px solid transparent;
+        background-color: #fff;
+      }
+      input[type='text']:focus,
+      input[type='date']:focus {
+        border-color: #ddd;
+        outline: none;
+      }
+      .header {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
       }
       .button-container {
-        margin-top: 10px;
+        margin-bottom: 10px;
         text-align: right;
       }
       button {
         margin-left: 5px;
         padding: 8px 12px;
         font-size: 14px;
+        color: white;
+        background-color: #006fb9;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #005b94;
       }
       .total-cell {
         font-weight: bold;
-        background-color: #f9f9f9;
+        background-color: #f7f7f7;
+        border-top: 3px double #ddd;
       }
     </style>
   </head>
   <body>
+    <div class="header">결의금액 작성기 (상신 전 삭제!!)</div>
+    <div class="button-container">
+      <button onclick="addRow()">행 추가</button>
+      <button onclick="deleteRow()">행 삭제</button>
+      <button onclick="copyTable()">복사</button>
+    </div>
     <table id="expenseTable">
       <thead>
         <tr>
@@ -58,7 +94,7 @@
         <tr>
           <td>1</td>
           <td><input type="text" /></td>
-          <td><input type="text" class="amount" oninput="calculateTotal(this)" /></td>
+          <td><input type="text" class="amount" oninput="formatAndCalculate(this)" /></td>
           <td><input type="text" /></td>
           <td><input type="date" /></td>
           <td><input type="date" /></td>
@@ -69,17 +105,11 @@
       <tfoot>
         <tr>
           <td colspan="2" class="total-cell">총 결의 금액</td>
-          <td colspan="6" class="total-cell" id="totalAmount">₩0</td>
+          <td class="total-cell" id="totalAmount">₩0</td>
+          <td colspan="5" class="total-cell"></td>
         </tr>
       </tfoot>
     </table>
-
-    <div class="button-container">
-      <button onclick="addRow()">행 추가</button>
-      <button onclick="deleteRow()">행 삭제</button>
-      <button onclick="copyTable()">복사</button>
-      <button onclick="deleteIframe()">삭제</button>
-    </div>
 
     <script>
       // 행 추가
@@ -88,15 +118,15 @@
         const rowCount = table.rows.length + 1;
         const newRow = table.insertRow();
         newRow.innerHTML = `
-        <td>${rowCount}</td>
-        <td><input type="text"></td>
-        <td><input type="text" class="amount" oninput="calculateTotal(this)"></td>
-        <td><input type="text"></td>
-        <td><input type="date"></td>
-        <td><input type="date"></td>
-        <td><input type="date"></td>
-        <td><input type="text"></td>
-      `;
+          <td>${rowCount}</td>
+          <td><input type="text"></td>
+          <td><input type="text" class="amount" oninput="formatAndCalculate(this)"></td>
+          <td><input type="text"></td>
+          <td><input type="date"></td>
+          <td><input type="date"></td>
+          <td><input type="date"></td>
+          <td><input type="text"></td>
+        `;
       }
 
       // 행 삭제
@@ -106,6 +136,17 @@
           table.deleteRow(table.rows.length - 1);
           calculateTotal();
         }
+      }
+
+      // 금액 포맷팅 및 합계 계산
+      function formatAndCalculate(input) {
+        let value = input.value.replace(/,/g, ''); // Remove commas
+        if (!isNaN(value) && value !== '') {
+          input.value = parseInt(value, 10).toLocaleString('ko-KR'); // Add commas
+        } else {
+          input.value = '';
+        }
+        calculateTotal();
       }
 
       // 총 합계 계산
@@ -120,18 +161,36 @@
         document.getElementById('totalAmount').textContent = `₩${total.toLocaleString('ko-KR')}`;
       }
 
-      // 테이블 복사
+      // 테이블 복사 (빈칸 행 제외)
       function copyTable() {
         const table = document.getElementById('expenseTable');
         const clonedTable = table.cloneNode(true);
-        const inputs = clonedTable.querySelectorAll('input');
+        const tbody = clonedTable.querySelector('tbody');
+        const rows = tbody.querySelectorAll('tr');
 
-        inputs.forEach((input) => {
+        rows.forEach((row) => {
+          const inputs = row.querySelectorAll('input');
+          let isEmptyRow = true;
+
+          inputs.forEach((input) => {
+            if (input.value.trim() !== '') {
+              isEmptyRow = false;
+            }
+          });
+
+          if (isEmptyRow) {
+            row.remove();
+          }
+        });
+
+        // 입력 값을 텍스트로 대체
+        tbody.querySelectorAll('input').forEach((input) => {
           const value = input.value || '';
           const td = input.parentNode;
           td.innerHTML = value;
         });
 
+        // 복사 준비
         const tempDiv = document.createElement('div');
         tempDiv.appendChild(clonedTable);
         document.body.appendChild(tempDiv);
@@ -142,17 +201,7 @@
         document.execCommand('copy');
         document.body.removeChild(tempDiv);
 
-        alert('테이블이 복사되었습니다. 양식에 붙여넣으세요!');
-      }
-
-      // iframe 삭제
-      function deleteIframe() {
-        const iframe = parent.document.querySelector('iframe');
-        if (iframe) {
-          iframe.remove();
-        } else {
-          alert('iframe을 찾을 수 없습니다.');
-        }
+        alert('빈 칸을 제외한 테이블이 복사되었습니다. 양식에 붙여넣으세요!');
       }
     </script>
   </body>
