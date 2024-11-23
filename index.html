@@ -11,7 +11,6 @@
         font-family: Arial, sans-serif;
         border-left: none;
         border-right: none;
-        table-layout: auto;
       }
       th,
       td {
@@ -101,18 +100,9 @@
         background-color: #f7f7f7;
         border-top: 3px double #ddd;
       }
-      hr.separator {
-        border: 0;
-        border-top: 1px dashed rgba(30, 31, 33, 0.2);
-        margin: 1rem 0;
-        clear: both;
-        user-select: none;
-        break-after: page;
-      }
     </style>
   </head>
   <body>
-    <hr class="separator" />
     <div class="toolbar">
       <div class="button-container">
         <div class="header">결의금액 작성기 <strong>(상신 전 삭제)</strong></div>
@@ -161,7 +151,6 @@
       </tfoot>
     </table>
     <br />
-    <hr class="separator" />
     <script>
       // 행 추가
       function addRow() {
