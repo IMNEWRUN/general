@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>결의서</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        background-color: #f4f4f4;
+      }
+      input[type='text'],
+      input[type='date'] {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+      }
+      .total-cell {
+        background-color: #f9f9f9;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <table id="expenseTable">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>지급처</th>
+          <th>금액(VAT 포함)</th>
+          <th>용도</th>
+          <th>구입일자</th>
+          <th>입고일자</th>
+          <th>지급일(지급요청일)</th>
+          <th>특이사항</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><input type="text" /></td>
+          <td><input type="text" class="amount" oninput="formatAndCalculate(this)" /></td>
+          <td><input type="text" /></td>
+          <td><input type="date" /></td>
+          <td><input type="date" /></td>
+          <td><input type="date" /></td>
+          <td><input type="text" /></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><input type="text" /></td>
+          <td><input type="text" class="amount" oninput="formatAndCalculate(this)" /></td>
+          <td><input type="text" /></td>
+          <td><input type="date" /></td>
+          <td><input type="date" /></td>
+          <td><input type="date" /></td>
+          <td><input type="text" /></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><input type="text" /></td>
+          <td><input type="text" class="amount" oninput="formatAndCalculate(this)" /></td>
+          <td><input type="text" /></td>
+          <td><input type="date" /></td>
+          <td><input type="date" /></td>
+          <td><input type="date" /></td>
+          <td><input type="text" /></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2" class="total-cell">총 결의 금액</td>
+          <td colspan="6" class="total-cell" id="totalAmount">0</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div style="margin-top: 10px">
+      <button onclick="addRow()">행 추가</button>
+      <button onclick="deleteRow()">행 삭제</button>
+    </div>
+    <script>
+      function formatAndCalculate(input) {
+        let value = input.value.replace(/,/g, ''); // Remove commas
+        if (!isNaN(value) && value !== '') {
+          input.value = parseInt(value).toLocaleString('ko-KR'); // Add commas
+        } else {
+          input.value = '';
+        }
+        calculateTotal();
+      }
+
+      function calculateTotal() {
+        let total = 0;
+        document.querySelectorAll('.amount').forEach((input) => {
+          let value = input.value.replace(/,/g, ''); // Remove commas
+          if (!isNaN(value) && value !== '') {
+            total += parseInt(value);
+          }
+        });
+        document.getElementById('totalAmount').innerText = total.toLocaleString('ko-KR'); // Display total with commas
+      }
+
+      function addRow() {
+        const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
+        const rowCount = table.rows.length + 1;
+        const newRow = table.insertRow();
+        newRow.innerHTML = `
+      <td>${rowCount}</td>
+      <td><input type="text"></td>
+      <td><input type="text" class="amount" oninput="formatAndCalculate(this)"></td>
+      <td><input type="text"></td>
+      <td><input type="date"></td>
+      <td><input type="date"></td>
+      <td><input type="date"></td>
+      <td><input type="text"></td>
+    `;
+      }
+
+      function deleteRow() {
+        const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
+        if (table.rows.length > 1) {
+          table.deleteRow(table.rows.length - 1);
+          calculateTotal();
+        }
+      }
+    </script>
+  </body>
+</html>
