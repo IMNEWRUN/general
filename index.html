@@ -20,6 +20,7 @@
       }
       th {
         background-color: #f9fbff;
+        font-weight: bold;
       }
       th:first-child,
       td:first-child {
@@ -95,7 +96,7 @@
     <hr class="separator" />
     <div class="toolbar">
       <div class="button-container">
-        <div class="header">결의금액 작성기 <strong>(상신 전 삭제!!)</strong></div>
+        <div class="header">결의금액 작성기 <strong>(상신 전 삭제)</strong></div>
         <button onclick="addRow()">행 추가</button>
         <button onclick="deleteRow()">행 삭제</button>
         <button onclick="copyTable()">복사</button>
@@ -197,7 +198,7 @@
         const table = document.getElementById('expenseTable');
         const clonedTable = table.cloneNode(true);
         const tbody = clonedTable.querySelector('tbody');
-        const rows = tbody.querySelectorAll('tr');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
 
         rows.forEach((row) => {
           const inputs = row.querySelectorAll('input');
@@ -213,6 +214,12 @@
             row.remove();
           }
         });
+
+        // 모든 행이 제거된 경우
+        if (tbody.querySelectorAll('tr').length === 0) {
+          alert('내용이 없습니다.');
+          return;
+        }
 
         // 입력 값을 텍스트로 대체
         tbody.querySelectorAll('input').forEach((input) => {
@@ -232,7 +239,7 @@
         document.execCommand('copy');
         document.body.removeChild(tempDiv);
 
-        alert('빈 칸을 제외한 테이블이 복사되었습니다. 양식에 붙여넣으세요!');
+        alert('복사 완료. 결의내용에 붙여넣으시기 바랍니다.');
       }
     </script>
   </body>
