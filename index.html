@@ -34,6 +34,10 @@
         padding: 8px 12px;
         font-size: 14px;
       }
+      .total-cell {
+        font-weight: bold;
+        background-color: #f9f9f9;
+      }
     </style>
   </head>
   <body>
@@ -54,7 +58,7 @@
         <tr>
           <td>1</td>
           <td><input type="text" /></td>
-          <td><input type="text" class="amount" /></td>
+          <td><input type="text" class="amount" oninput="calculateTotal(this)" /></td>
           <td><input type="text" /></td>
           <td><input type="date" /></td>
           <td><input type="date" /></td>
@@ -62,6 +66,12 @@
           <td><input type="text" /></td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2" class="total-cell">총 결의 금액</td>
+          <td colspan="6" class="total-cell" id="totalAmount">₩0</td>
+        </tr>
+      </tfoot>
     </table>
 
     <div class="button-container">
@@ -72,6 +82,7 @@
     </div>
 
     <script>
+      // 행 추가
       function addRow() {
         const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
         const rowCount = table.rows.length + 1;
@@ -79,7 +90,7 @@
         newRow.innerHTML = `
         <td>${rowCount}</td>
         <td><input type="text"></td>
-        <td><input type="text" class="amount"></td>
+        <td><input type="text" class="amount" oninput="calculateTotal(this)"></td>
         <td><input type="text"></td>
         <td><input type="date"></td>
         <td><input type="date"></td>
@@ -88,26 +99,39 @@
       `;
       }
 
+      // 행 삭제
       function deleteRow() {
         const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
         if (table.rows.length > 1) {
           table.deleteRow(table.rows.length - 1);
+          calculateTotal();
         }
       }
 
+      // 총 합계 계산
+      function calculateTotal() {
+        let total = 0;
+        document.querySelectorAll('.amount').forEach((input) => {
+          const value = input.value.replace(/,/g, ''); // Remove commas
+          if (!isNaN(value) && value !== '') {
+            total += parseInt(value, 10);
+          }
+        });
+        document.getElementById('totalAmount').textContent = `₩${total.toLocaleString('ko-KR')}`;
+      }
+
+      // 테이블 복사
       function copyTable() {
         const table = document.getElementById('expenseTable');
-        const clonedTable = table.cloneNode(true); // Copy table structure
+        const clonedTable = table.cloneNode(true);
         const inputs = clonedTable.querySelectorAll('input');
 
-        // Replace inputs with their values and make them non-editable
         inputs.forEach((input) => {
-          const value = input.value || ''; // Get input value
+          const value = input.value || '';
           const td = input.parentNode;
-          td.innerHTML = value; // Replace input with plain text
+          td.innerHTML = value;
         });
 
-        // Copy to clipboard
         const tempDiv = document.createElement('div');
         tempDiv.appendChild(clonedTable);
         document.body.appendChild(tempDiv);
@@ -118,11 +142,17 @@
         document.execCommand('copy');
         document.body.removeChild(tempDiv);
 
-        alert('테이블이 복사되었습니다! 양식에 붙여넣기 하세요.');
+        alert('테이블이 복사되었습니다. 양식에 붙여넣으세요!');
       }
 
+      // iframe 삭제
       function deleteIframe() {
-        parent.document.querySelector('iframe').remove();
+        const iframe = parent.document.querySelector('iframe');
+        if (iframe) {
+          iframe.remove();
+        } else {
+          alert('iframe을 찾을 수 없습니다.');
+        }
       }
     </script>
   </body>
