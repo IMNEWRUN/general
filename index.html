@@ -42,16 +42,21 @@
       }
       .header {
         text-align: center;
-        font-size: 18px;
+        font-size: 24px;
         font-weight: bold;
         margin-bottom: 10px;
       }
-      .button-container {
-        margin-bottom: 10px;
-        text-align: right;
+      .header strong {
+        color: red;
       }
-      button {
-        margin-left: 5px;
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 10px;
+      }
+      .button-container button {
+        margin-right: 5px;
         padding: 8px 12px;
         font-size: 14px;
         color: white;
@@ -60,8 +65,15 @@
         border-radius: 4px;
         cursor: pointer;
       }
-      button:hover {
+      .button-container button:hover {
         background-color: #005b94;
+      }
+      .guide {
+        color: red;
+        font-size: 14px;
+        text-align: left;
+        max-width: 60%;
+        line-height: 1.5;
       }
       .total-cell {
         font-weight: bold;
@@ -71,11 +83,19 @@
     </style>
   </head>
   <body>
-    <div class="header">결의금액 작성기 (상신 전 삭제!!)</div>
-    <div class="button-container">
-      <button onclick="addRow()">행 추가</button>
-      <button onclick="deleteRow()">행 삭제</button>
-      <button onclick="copyTable()">복사</button>
+    <div class="toolbar">
+      <div class="button-container">
+        <div class="header">결의금액 작성기 <strong>(상신 전 삭제!!)</strong></div>
+        <button onclick="addRow()">행 추가</button>
+        <button onclick="deleteRow()">행 삭제</button>
+        <button onclick="copyTable()">복사</button>
+      </div>
+      <div class="guide">
+        ※ 사용 가이드 ※<br />
+        1. 내용을 입력 후 '복사' 버튼을 클릭하여 내용을 복사합니다.<br />
+        2. 결의 내용 입력 영역에 '붙여넣기(Ctrl + V)'를 합니다.<br />
+        3. 모든 작성을 마친 후, 작성 폼을 지우고 상신합니다.
+      </div>
     </div>
     <table id="expenseTable">
       <thead>
