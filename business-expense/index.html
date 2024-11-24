@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>출장(외근)경비 정산 작성 가이드</title>
+    <title>정산내역 작성 가이드</title>
     <style>
       @font-face {
         font-family: 'Pretendard-Regular';
@@ -27,21 +27,20 @@
         margin-bottom: 20px;
       }
 
-      .header span {
+      .header strong {
         color: red;
-        font-size: 20px;
-        margin-left: 10px;
       }
 
       .toolbar {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
       }
 
       button {
-        padding: 10px 16px;
+        margin-right: 10px;
+        padding: 8px 12px;
         font-size: 14px;
         color: #333;
         background-color: #ffffff;
@@ -66,7 +65,7 @@
       table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 20px;
+        font-size: 14px;
         background-color: #ffffff;
       }
 
@@ -141,7 +140,7 @@
     </style>
   </head>
   <body>
-    <div class="header">정산내역 작성 가이드 <span>(상신 전 삭제)</span></div>
+    <div class="header">정산내역 작성 가이드 <strong>(상신 전 삭제)</strong></div>
     <div class="toolbar">
       <button onclick="copyTable()">복사</button>
       <div class="guide">
