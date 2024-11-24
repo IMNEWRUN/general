@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>결의서</title>
+    <title>지출결의서 템플릿</title>
     <style>
       table {
         width: 100%;
         border-collapse: collapse;
         font-family: Arial, sans-serif;
-        font-size: 14px; /* 테이블 폰트 14px */
+        font-size: 14px;
         border-left: none;
         border-right: none;
       }
@@ -43,12 +43,12 @@
       th:nth-child(5),
       th:nth-child(6),
       th:nth-child(7) {
-        max-width: 40px; /* 날짜 column: YYYY-MM-DD 크기에 맞게 설정 */
+        max-width: 40px;
       }
       input[type='text'],
       input[type='date'] {
         width: 100%;
-        max-width: 100%; /* 입력 필드 최대 크기 설정 */
+        max-width: 100%;
         box-sizing: border-box;
         text-align: center;
         border: 1px solid transparent;
@@ -97,6 +97,13 @@
         font-weight: bold;
         background-color: #f7f7f7;
         border-top: 3px double #ddd;
+      }
+      .footer-text {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 14px;
+        color: red;
       }
     </style>
   </head>
@@ -150,7 +157,6 @@
     </table>
     <br />
     <script>
-      // 행 추가
       function addRow() {
         const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
         const rowCount = table.rows.length + 1;
@@ -167,7 +173,6 @@
         `;
       }
 
-      // 행 삭제
       function deleteRow() {
         const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
         if (table.rows.length > 1) {
@@ -176,22 +181,20 @@
         }
       }
 
-      // 금액 포맷팅 및 합계 계산
       function formatAndCalculate(input) {
-        let value = input.value.replace(/,/g, ''); // Remove commas
+        let value = input.value.replace(/,/g, '');
         if (!isNaN(value) && value !== '') {
-          input.value = parseInt(value, 10).toLocaleString('ko-KR'); // Add commas
+          input.value = parseInt(value, 10).toLocaleString('ko-KR');
         } else {
           input.value = '';
         }
         calculateTotal();
       }
 
-      // 총 합계 계산
       function calculateTotal() {
         let total = 0;
         document.querySelectorAll('.amount').forEach((input) => {
-          const value = input.value.replace(/,/g, ''); // Remove commas
+          const value = input.value.replace(/,/g, '');
           if (!isNaN(value) && value !== '') {
             total += parseInt(value, 10);
           }
@@ -199,7 +202,6 @@
         document.getElementById('totalAmount').textContent = `₩${total.toLocaleString('ko-KR')}`;
       }
 
-      // 테이블 복사 (빈칸 행 제외)
       function copyTable() {
         const table = document.getElementById('expenseTable');
         const clonedTable = table.cloneNode(true);
@@ -221,20 +223,17 @@
           }
         });
 
-        // 모든 행이 제거된 경우
         if (tbody.querySelectorAll('tr').length === 0) {
           alert('내용이 없습니다.');
           return;
         }
 
-        // 입력 값을 텍스트로 대체
         tbody.querySelectorAll('input').forEach((input) => {
           const value = input.value || '';
           const td = input.parentNode;
           td.innerHTML = value;
         });
 
-        // 복사 준비
         const tempDiv = document.createElement('div');
         tempDiv.appendChild(clonedTable);
         document.body.appendChild(tempDiv);
@@ -248,8 +247,6 @@
         alert('복사 완료. 결의내용에 붙여넣으시기 바랍니다.');
       }
     </script>
-    <div style="position: fixed; bottom: 10px; right: 10px; font-size: 14px; color: #111">
-      여기에 커서를 놓고 지우기 →
-    </div>
+    <div class="footer-text">여기에 커서를 놓고 지우기 →</div>
   </body>
 </html>
