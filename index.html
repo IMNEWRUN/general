@@ -9,6 +9,7 @@
         width: 100%;
         border-collapse: collapse;
         font-family: Arial, sans-serif;
+        font-size: 14px; /* 테이블 폰트 14px */
         border-left: none;
         border-right: none;
       }
@@ -30,9 +31,24 @@
       td:last-child {
         border-right: none;
       }
+      td:nth-child(2),
+      td:nth-child(3),
+      th:nth-child(2),
+      th:nth-child(3) {
+        max-width: 60px;
+      }
+      td:nth-child(5),
+      td:nth-child(6),
+      td:nth-child(7),
+      th:nth-child(5),
+      th:nth-child(6),
+      th:nth-child(7) {
+        max-width: 40px; /* 날짜 column: YYYY-MM-DD 크기에 맞게 설정 */
+      }
       input[type='text'],
       input[type='date'] {
         width: 100%;
+        max-width: 100%; /* 입력 필드 최대 크기 설정 */
         box-sizing: border-box;
         text-align: center;
         border: 1px solid transparent;
