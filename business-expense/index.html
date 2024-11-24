@@ -3,101 +3,134 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>출장(외근)경비 정산서 계산기</title>
+    <title>출장(외근)경비 정산 작성 가이드</title>
     <style>
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        border-left: none;
-        border-right: none;
+      @font-face {
+        font-family: 'Pretendard-Regular';
+        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+          format('woff');
+        font-weight: 400;
+        font-style: normal;
       }
-      th,
-      td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
+
+      body {
+        font-family: 'Pretendard-Regular', Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 20px;
+        color: #333;
       }
-      th {
-        background-color: #eee;
-        font-weight: bold;
-      }
-      th:first-child,
-      td:first-child {
-        border-left: none;
-      }
-      th:last-child,
-      td:last-child {
-        border-right: none;
-      }
-      td:nth-child(2),
-      td:nth-child(3),
-      th:nth-child(2),
-      th:nth-child(3) {
-        max-width: 60px;
-      }
-      td:nth-child(5),
-      td:nth-child(6),
-      td:nth-child(7),
-      th:nth-child(5),
-      th:nth-child(6),
-      th:nth-child(7) {
-        max-width: 40px;
-      }
-      input[type='text'],
-      input[type='date'] {
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        text-align: center;
-        border: 1px solid transparent;
-        background-color: #fff;
-      }
-      input[type='text']:focus,
-      input[type='date']:focus {
-        border-color: #ddd;
-        outline: none;
-      }
+
       .header {
-        text-align: center;
+        text-align: left;
         font-size: 20px;
         font-weight: bold;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       }
-      .header strong {
+
+      .header span {
         color: red;
+        font-size: 20px;
+        margin-left: 10px;
       }
+
       .toolbar {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       }
-      .button-container button {
-        margin-right: 5px;
-        padding: 8px 12px;
+
+      button {
+        padding: 10px 16px;
         font-size: 14px;
-        background-color: #fff;
-        border: 1px solid #e3e3e3;
+        color: #333;
+        background-color: #ffffff;
+        border: 1px solid #d1d1d1;
         border-radius: 4px;
         cursor: pointer;
+        transition: background-color 0.3s ease;
       }
-      .button-container button:hover {
-        background-color: #eee;
+
+      button:hover {
+        background-color: #e8e8e8;
       }
+
       .guide {
         color: red;
         font-size: 14px;
-        text-align: left;
         max-width: 60%;
         line-height: 1.5;
+        text-align: left;
       }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: #ffffff;
+      }
+
+      th,
+      td {
+        border: 1px solid #d1d1d1;
+        padding: 10px;
+      }
+
+      th {
+        background-color: #e8e8e8;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      /* 구분, 항목 컬럼의 넓이 더 줄이기 */
+      td:nth-child(1),
+      td:nth-child(2),
+      th:nth-child(1),
+      th:nth-child(2) {
+        width: 10%;
+        text-align: center;
+      }
+
+      /* 적요와 금액 컬럼 정렬 */
+      td:nth-child(3) {
+        text-align: left; /* 적요 */
+      }
+
+      td:nth-child(4) {
+        text-align: right !important; /* 금액 */
+      }
+
+      input[type='text'] {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #d1d1d1;
+        padding: 5px;
+      }
+
+      .amount-input {
+        text-align: right;
+      }
+
+      .description-input {
+        text-align: left;
+      }
+
+      input[type='text']:focus {
+        border-color: #888;
+        outline: none;
+      }
+
       .total-cell {
         font-weight: bold;
-        background-color: #eee;
-        border-top: 3px double #ddd;
+        background-color: #e8e8e8;
+        text-align: right !important; /* 합계 및 총계, 강제 적용 */
       }
+
+      /* 출장비 총계 행 스타일 */
+      tfoot tr:last-child {
+        border-top: 3px double #888;
+      }
+
       .footer-text {
         position: fixed;
         bottom: 10px;
@@ -108,135 +141,152 @@
     </style>
   </head>
   <body>
+    <div class="header">출장(외근)경비 정산 작성 가이드 <span>(상신 전 삭제)</span></div>
     <div class="toolbar">
-      <div class="button-container">
-        <div class="header">출장(외근)경비 정산서 작성 가이드 <strong>(상신 전 삭제)</strong></div>
-        <button onclick="addRow()">행 추가</button>
-        <button onclick="deleteRow()">행 삭제</button>
-        <button onclick="copyTable()">복사</button>
-      </div>
+      <button onclick="copyTable()">복사</button>
       <div class="guide">
         ※ 사용 가이드 ※<br />
         1. 내용을 입력 후 '복사' 버튼을 클릭하여 내용을 복사합니다.<br />
-        2. 결의 내용 입력 영역에 '붙여넣기(Ctrl + V)'를 합니다.<br />
+        2. 정산내역 입력 영역에 '붙여넣기(Ctrl + V)'를 합니다.<br />
         3. 문서 작성을 마친 후, 가이드를 지우고 상신합니다.
       </div>
     </div>
     <table id="expenseTable">
       <thead>
         <tr>
-          <th>No</th>
-          <th>지급처</th>
-          <th>금액 (VAT 포함)</th>
-          <th>용도</th>
-          <th>구입일자</th>
-          <th>입고일자</th>
-          <th>지급일(지급요청일)</th>
-          <th>특이사항</th>
+          <th>구분</th>
+          <th>항목</th>
+          <th>적요</th>
+          <th>금액</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>1</td>
-          <td><input type="text" /></td>
-          <td><input type="text" class="amount" oninput="formatAndCalculate(this)" /></td>
-          <td><input type="text" /></td>
-          <td><input type="date" /></td>
-          <td><input type="date" /></td>
-          <td><input type="date" /></td>
-          <td><input type="text" /></td>
+          <td rowspan="5">법인카드 사용<br />출장비 정산내역</td>
+          <td>식비</td>
+          <td><input type="text" class="description-input" /></td>
+          <td><input type="text" class="amount amount-input" oninput="formatAndCalculate(this)" /></td>
+        </tr>
+        <tr>
+          <td>숙박비</td>
+          <td><input type="text" class="description-input" /></td>
+          <td><input type="text" class="amount amount-input" oninput="formatAndCalculate(this)" /></td>
+        </tr>
+        <tr>
+          <td>교통비</td>
+          <td><input type="text" class="description-input" /></td>
+          <td><input type="text" class="amount amount-input" oninput="formatAndCalculate(this)" /></td>
+        </tr>
+        <tr>
+          <td>기타</td>
+          <td><input type="text" class="description-input" /></td>
+          <td><input type="text" class="amount amount-input" oninput="formatAndCalculate(this)" /></td>
+        </tr>
+        <tr>
+          <td>합계</td>
+          <td></td>
+          <td class="total-cell amount" id="corporateTotal">0원</td>
+        </tr>
+        <tr>
+          <td rowspan="5">개인사용<br />출장비 신청내역</td>
+          <td>교통비</td>
+          <td><input type="text" class="description-input" /></td>
+          <td><input type="text" class="amount amount-input" oninput="formatAndCalculate(this)" /></td>
+        </tr>
+        <tr>
+          <td>유류비(자가이용)</td>
+          <td><input type="text" class="description-input" /></td>
+          <td><input type="text" class="amount amount-input" oninput="formatAndCalculate(this)" /></td>
+        </tr>
+        <tr>
+          <td>도로사용료</td>
+          <td><input type="text" class="description-input" /></td>
+          <td><input type="text" class="amount amount-input" oninput="formatAndCalculate(this)" /></td>
+        </tr>
+        <tr>
+          <td>기타</td>
+          <td><input type="text" class="description-input" /></td>
+          <td><input type="text" class="amount amount-input" oninput="formatAndCalculate(this)" /></td>
+        </tr>
+        <tr>
+          <td>합계</td>
+          <td></td>
+          <td class="total-cell amount" id="personalTotal">0원</td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="2" class="total-cell">총 결의 금액</td>
-          <td class="total-cell" id="totalAmount">₩0</td>
-          <td colspan="5" class="total-cell"></td>
+          <td colspan="3" class="total-cell">출장비 총계</td>
+          <td class="total-cell amount" id="grandTotal">0원</td>
         </tr>
       </tfoot>
     </table>
-    <br />
+    <div class="footer-text">여기에 커서를 놓고 지우기 →</div>
     <script>
-      function addRow() {
-        const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
-        const rowCount = table.rows.length + 1;
-        const newRow = table.insertRow();
-        newRow.innerHTML = `
-          <td>${rowCount}</td>
-          <td><input type="text"></td>
-          <td><input type="text" class="amount" oninput="formatAndCalculate(this)"></td>
-          <td><input type="text"></td>
-          <td><input type="date"></td>
-          <td><input type="date"></td>
-          <td><input type="date"></td>
-          <td><input type="text"></td>
-        `;
-      }
-
-      function deleteRow() {
-        const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
-        if (table.rows.length > 1) {
-          table.deleteRow(table.rows.length - 1);
-          calculateTotal();
-        }
-      }
-
       function formatAndCalculate(input) {
-        let value = input.value.replace(/,/g, '');
-        if (!isNaN(value) && value !== '') {
-          input.value = parseInt(value, 10).toLocaleString('ko-KR');
+        let value = input.value.replace(/,/g, '').replace(/[^\d]/g, '');
+        if (value) {
+          value = parseInt(value, 10);
+          input.value = value.toLocaleString('ko-KR');
         } else {
           input.value = '';
         }
-        calculateTotal();
+        calculateTotals();
       }
 
-      function calculateTotal() {
-        let total = 0;
-        document.querySelectorAll('.amount').forEach((input) => {
-          const value = input.value.replace(/,/g, '');
-          if (!isNaN(value) && value !== '') {
-            total += parseInt(value, 10);
+      function calculateTotals() {
+        const amounts = document.querySelectorAll('.amount-input');
+        let corporateTotal = 0;
+        let personalTotal = 0;
+
+        amounts.forEach((input, index) => {
+          const value = parseInt(input.value.replace(/,/g, '')) || 0;
+          if (index < 4) {
+            corporateTotal += value;
+          } else if (index >= 4 && index < 8) {
+            personalTotal += value;
           }
         });
-        document.getElementById('totalAmount').textContent = `₩${total.toLocaleString('ko-KR')}`;
+
+        document.getElementById('corporateTotal').textContent = `${corporateTotal.toLocaleString('ko-KR')}원`;
+        document.getElementById('personalTotal').textContent = `${personalTotal.toLocaleString('ko-KR')}원`;
+        document.getElementById('grandTotal').textContent = `${(corporateTotal + personalTotal).toLocaleString(
+          'ko-KR',
+        )}원`;
       }
 
       function copyTable() {
         const table = document.getElementById('expenseTable');
         const clonedTable = table.cloneNode(true);
-        const tbody = clonedTable.querySelector('tbody');
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-
-        rows.forEach((row) => {
-          const inputs = row.querySelectorAll('input');
-          let isEmptyRow = true;
-
-          inputs.forEach((input) => {
-            if (input.value.trim() !== '') {
-              isEmptyRow = false;
-            }
-          });
-
-          if (isEmptyRow) {
-            row.remove();
-          }
-        });
-
-        if (tbody.querySelectorAll('tr').length === 0) {
-          alert('내용이 없습니다.');
-          return;
-        }
-
-        tbody.querySelectorAll('input').forEach((input) => {
+        clonedTable.querySelectorAll('input').forEach((input) => {
           const value = input.value || '';
           const td = input.parentNode;
-          td.innerHTML = value;
+          td.textContent = value;
+          td.style.textAlign = input.classList.contains('description-input') ? 'left' : 'right';
         });
 
+        clonedTable.querySelectorAll('td:nth-child(1)').forEach((td) => {
+          td.style.verticalAlign = 'middle';
+        });
+
+        clonedTable.querySelectorAll('.total-cell').forEach((td) => {
+          td.style.textAlign = 'right';
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+        table { width: 100%; border-collapse: collapse; background-color: #ffffff; }
+        th, td { border: 1px solid #d1d1d1; padding: 10px; }
+        td:nth-child(3) { text-align: left; }
+        td:nth-child(4), th:nth-child(4) { text-align: right !important; }
+        th { text-align: center; }
+        tfoot tr:last-child { border-top: 3px double #888; }
+      `;
         const tempDiv = document.createElement('div');
+        tempDiv.appendChild(style);
         tempDiv.appendChild(clonedTable);
         document.body.appendChild(tempDiv);
+
         const range = document.createRange();
         range.selectNode(tempDiv);
         window.getSelection().removeAllRanges();
@@ -244,9 +294,8 @@
         document.execCommand('copy');
         document.body.removeChild(tempDiv);
 
-        alert('복사 완료. 결의내용에 붙여넣으시기 바랍니다.');
+        alert('복사 완료! 정산내역에 붙여넣으시기 바랍니다.');
       }
     </script>
-    <div class="footer-text">여기에 커서를 놓고 지우기 →</div>
   </body>
 </html>
