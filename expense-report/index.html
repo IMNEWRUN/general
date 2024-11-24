@@ -13,24 +13,11 @@
         font-style: normal;
       }
 
-      :root {
-        --primary-color: #333; /* 기본 텍스트 색상 */
-        --secondary-color: #555; /* 보조 텍스트 색상 */
-        --border-color: #d1d1d1; /* 기본 테두리 색상 */
-        --border-color-dark: #c7c7c7; /* 진한 테두리 색상 */
-        --highlight-color: #888; /* 포커스 및 강조 색상 */
-        --background-color: #f5f5f5; /* 페이지 배경 색상 */
-        --table-bg-color: #ffffff; /* 테이블 배경 색상 */
-        --header-bg-color: #e8e8e8; /* 테이블 헤더 배경 색상 */
-        --footer-text-color: red; /* 주의문구 색상 */
-        --shadow-color: rgba(0, 0, 0, 0.1); /* 그림자 색상 */
-      }
-
       body {
         font-family: 'Pretendard-Regular', Arial, sans-serif;
-        background-color: var(--background-color);
+        background-color: #f5f5f5;
         margin: 20px;
-        color: var(--primary-color);
+        color: #333;
       }
 
       .header {
@@ -41,7 +28,7 @@
       }
 
       .header strong {
-        color: var(--footer-text-color);
+        color: red;
       }
 
       .toolbar {
@@ -55,20 +42,20 @@
         margin-right: 10px;
         padding: 8px 12px;
         font-size: 14px;
-        color: var(--primary-color);
-        background-color: var(--table-bg-color);
-        border: 1px solid var(--border-color);
+        color: #333;
+        background-color: #ffffff;
+        border: 1px solid #d1d1d1;
         border-radius: 4px;
         cursor: pointer;
         transition: background-color 0.3s ease;
       }
 
       .button-container button:hover {
-        background-color: var(--header-bg-color);
+        background-color: #e8e8e8;
       }
 
       .guide {
-        color: var(--footer-text-color);
+        color: red;
         font-size: 14px;
         max-width: 60%;
         line-height: 1.5;
@@ -77,26 +64,26 @@
       table {
         width: 100%;
         border-collapse: collapse;
-        background-color: var(--table-bg-color);
+        background-color: #ffffff;
         font-size: 14px;
-        box-shadow: 0 2px 4px var(--shadow-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
       th,
       td {
-        border: 1px solid var(--border-color);
+        border: 1px solid #d1d1d1;
         padding: 10px;
         text-align: center;
       }
 
       th {
-        background-color: var(--header-bg-color);
+        background-color: #e8e8e8;
         font-weight: bold;
-        color: var(--secondary-color);
+        color: #555;
       }
 
       td {
-        border-color: var(--border-color-dark);
+        border-color: #c7c7c7;
       }
 
       th:first-child,
@@ -136,7 +123,7 @@
         width: 100%;
         box-sizing: border-box;
         text-align: center;
-        border: 1px solid var(--border-color);
+        border: 1px solid #d1d1d1;
         background-color: #fcfcfc;
         padding: 5px;
         border-radius: 4px;
@@ -145,15 +132,15 @@
 
       input[type='text']:focus,
       input[type='date']:focus {
-        border-color: var(--highlight-color);
+        border-color: #888;
         outline: none;
       }
 
       .total-cell {
         font-weight: bold;
-        background-color: var(--header-bg-color);
-        border-top: 3px double var(--highlight-color);
-        color: var(--secondary-color);
+        background-color: #e8e8e8;
+        border-top: 3px double #888;
+        color: #555;
       }
 
       .footer-text {
@@ -161,7 +148,7 @@
         bottom: 10px;
         right: 10px;
         font-size: 14px;
-        color: var(--footer-text-color);
+        color: red;
       }
     </style>
   </head>
@@ -176,7 +163,7 @@
       <div class="guide">
         ※ 사용 가이드 ※<br />
         1. 내용을 입력 후 '복사' 버튼을 클릭하여 내용을 복사합니다.<br />
-        2. 결의 내용 입력 영역에 '붙여넣기(Ctrl + V)'를 합니다.<br />
+        2. 결의내용 입력 영역에 '붙여넣기(Ctrl + V)'를 합니다.<br />
         3. 문서 작성을 마친 후, 가이드를 지우고 상신합니다.
       </div>
     </div>
@@ -213,6 +200,7 @@
         </tr>
       </tfoot>
     </table>
+    <div class="footer-text">상신 전 여기에 커서를 놓고 가이드를 지우세요. →</div>
     <script>
       function addRow() {
         const table = document.querySelector('#expenseTable tbody');
@@ -277,9 +265,8 @@
         window.getSelection().addRange(range);
         document.execCommand('copy');
         document.body.removeChild(tempDiv);
-        alert('복사 완료. 결의내용에 붙여넣으시기 바랍니다.');
+        alert('복사 완료! 결의내용에 붙여넣으시기 바랍니다.');
       }
     </script>
-    <div class="footer-text">여기에 커서를 놓고 지우기 →</div>
   </body>
 </html>
