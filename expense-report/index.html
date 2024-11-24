@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>지출결의 계산기</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        border-left: none;
+        border-right: none;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        background-color: #eee;
+        font-weight: bold;
+      }
+      th:first-child,
+      td:first-child {
+        border-left: none;
+      }
+      th:last-child,
+      td:last-child {
+        border-right: none;
+      }
+      td:nth-child(2),
+      td:nth-child(3),
+      th:nth-child(2),
+      th:nth-child(3) {
+        max-width: 60px;
+      }
+      td:nth-child(5),
+      td:nth-child(6),
+      td:nth-child(7),
+      th:nth-child(5),
+      th:nth-child(6),
+      th:nth-child(7) {
+        max-width: 40px;
+      }
+      input[type='text'],
+      input[type='date'] {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        border: 1px solid transparent;
+        background-color: #fff;
+      }
+      input[type='text']:focus,
+      input[type='date']:focus {
+        border-color: #ddd;
+        outline: none;
+      }
+      .header {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .header strong {
+        color: red;
+      }
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 10px;
+      }
+      .button-container button {
+        margin-right: 5px;
+        padding: 8px 12px;
+        font-size: 14px;
+        background-color: #fff;
+        border: 1px solid #e3e3e3;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .button-container button:hover {
+        background-color: #eee;
+      }
+      .guide {
+        color: red;
+        font-size: 14px;
+        text-align: left;
+        max-width: 60%;
+        line-height: 1.5;
+      }
+      .total-cell {
+        font-weight: bold;
+        background-color: #eee;
+        border-top: 3px double #ddd;
+      }
+      .footer-text {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 14px;
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <div class="button-container">
+        <div class="header">지출결의서 작성 가이드 <strong>(상신 전 삭제)</strong></div>
+        <button onclick="addRow()">행 추가</button>
+        <button onclick="deleteRow()">행 삭제</button>
+        <button onclick="copyTable()">복사</button>
+      </div>
+      <div class="guide">
+        ※ 사용 가이드 ※<br />
+        1. 내용을 입력 후 '복사' 버튼을 클릭하여 내용을 복사합니다.<br />
+        2. 결의 내용 입력 영역에 '붙여넣기(Ctrl + V)'를 합니다.<br />
+        3. 문서 작성을 마친 후, 가이드를 지우고 상신합니다.
+      </div>
+    </div>
+    <table id="expenseTable">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>지급처</th>
+          <th>금액 (VAT 포함)</th>
+          <th>용도</th>
+          <th>구입일자</th>
+          <th>입고일자</th>
+          <th>지급일(지급요청일)</th>
+          <th>특이사항</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><input type="text" /></td>
+          <td><input type="text" class="amount" oninput="formatAndCalculate(this)" /></td>
+          <td><input type="text" /></td>
+          <td><input type="date" /></td>
+          <td><input type="date" /></td>
+          <td><input type="date" /></td>
+          <td><input type="text" /></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2" class="total-cell">총 결의 금액</td>
+          <td class="total-cell" id="totalAmount">₩0</td>
+          <td colspan="5" class="total-cell"></td>
+        </tr>
+      </tfoot>
+    </table>
+    <br />
+    <script>
+      function addRow() {
+        const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
+        const rowCount = table.rows.length + 1;
+        const newRow = table.insertRow();
+        newRow.innerHTML = `
+          <td>${rowCount}</td>
+          <td><input type="text"></td>
+          <td><input type="text" class="amount" oninput="formatAndCalculate(this)"></td>
+          <td><input type="text"></td>
+          <td><input type="date"></td>
+          <td><input type="date"></td>
+          <td><input type="date"></td>
+          <td><input type="text"></td>
+        `;
+      }
+
+      function deleteRow() {
+        const table = document.getElementById('expenseTable').getElementsByTagName('tbody')[0];
+        if (table.rows.length > 1) {
+          table.deleteRow(table.rows.length - 1);
+          calculateTotal();
+        }
+      }
+
+      function formatAndCalculate(input) {
+        let value = input.value.replace(/,/g, '');
+        if (!isNaN(value) && value !== '') {
+          input.value = parseInt(value, 10).toLocaleString('ko-KR');
+        } else {
+          input.value = '';
+        }
+        calculateTotal();
+      }
+
+      function calculateTotal() {
+        let total = 0;
+        document.querySelectorAll('.amount').forEach((input) => {
+          const value = input.value.replace(/,/g, '');
+          if (!isNaN(value) && value !== '') {
+            total += parseInt(value, 10);
+          }
+        });
+        document.getElementById('totalAmount').textContent = `₩${total.toLocaleString('ko-KR')}`;
+      }
+
+      function copyTable() {
+        const table = document.getElementById('expenseTable');
+        const clonedTable = table.cloneNode(true);
+        const tbody = clonedTable.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.forEach((row) => {
+          const inputs = row.querySelectorAll('input');
+          let isEmptyRow = true;
+
+          inputs.forEach((input) => {
+            if (input.value.trim() !== '') {
+              isEmptyRow = false;
+            }
+          });
+
+          if (isEmptyRow) {
+            row.remove();
+          }
+        });
+
+        if (tbody.querySelectorAll('tr').length === 0) {
+          alert('내용이 없습니다.');
+          return;
+        }
+
+        tbody.querySelectorAll('input').forEach((input) => {
+          const value = input.value || '';
+          const td = input.parentNode;
+          td.innerHTML = value;
+        });
+
+        const tempDiv = document.createElement('div');
+        tempDiv.appendChild(clonedTable);
+        document.body.appendChild(tempDiv);
+        const range = document.createRange();
+        range.selectNode(tempDiv);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        document.body.removeChild(tempDiv);
+
+        alert('복사 완료. 결의내용에 붙여넣으시기 바랍니다.');
+      }
+    </script>
+    <div class="footer-text">여기에 커서를 놓고 지우기 →</div>
+  </body>
+</html>
