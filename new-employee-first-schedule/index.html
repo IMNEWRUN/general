@@ -20,7 +20,7 @@
 
       /* 입력 폼 */
       .form-container {
-        max-width: 880px;
+        max-width: 1024px;
         margin: 0 auto 40px auto;
         background: white;
         padding: 40px;
@@ -54,7 +54,7 @@
 
       .schedule-item {
         display: grid;
-        grid-template-columns: 1fr 2fr 1fr 1fr 40px;
+        grid-template-columns: 1fr 2fr 1fr 1.2fr 40px;
         gap: 10px;
         margin-bottom: 12px;
       }
@@ -92,18 +92,17 @@
 
       /* 출력 영역 */
       .print-container {
-        max-width: 880px;
+        max-width: 1024px;
         margin: 0 auto;
         background: white;
         padding: 40px;
-        border: 1px solid #e5e7eb;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       }
 
       .header {
         text-align: center;
         background: linear-gradient(to right, #2c5282, #2b6cb0);
-        padding: 50px 30px 60px 30px;
+        padding: 40px 0;
         margin-bottom: 50px;
         border-radius: 8px;
         color: white;
@@ -131,7 +130,7 @@
         display: flex;
         justify-content: space-between;
         background: #f9fafb;
-        padding: 20px 60px;
+        padding: 20px 40px;
         border-left: 4px solid #006fb9;
         margin-bottom: 30px;
       }
@@ -219,11 +218,11 @@
       <div class="input-grid">
         <div>
           <label>Employee Name</label>
-          <input type="text" id="employeeName" placeholder="Newrun Kim" />
+          <input type="text" id="employeeName" placeholder="e.g., Newrun Kim" />
         </div>
         <div>
           <label>Department</label>
-          <input type="text" id="teamName" placeholder="Discovery Chemistry" />
+          <input type="text" id="teamName" placeholder="e.g., Discovery Chemistry" />
         </div>
         <div>
           <label>First Workday</label>
@@ -273,10 +272,10 @@
           <input type="text" class="time" value="11:30 ~" /><input
             type="text"
             class="activity"
-            value="Meet Team Member" /><input type="text" class="location" value="Purple Room" /><input
+            value="Meet Team Member" /><input type="text" class="location" value="Yellow Room" /><input
             type="text"
             class="lead"
-            placeholder="Discovery Chemistry"
+            placeholder="e.g., Discovery Chemistry"
             value="" /><button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
         </div>
       </div>
@@ -386,9 +385,9 @@
         const element = document.getElementById('printArea');
         html2pdf()
           .set({
-            margin: 0.5,
+            margin: 0,
             filename: 'First_Day_Schedule.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
+            image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 2, scrollY: 0 },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
           })
