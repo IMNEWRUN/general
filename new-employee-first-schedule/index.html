@@ -245,7 +245,7 @@
           <input type="text" class="time" value="09:00 - 09:30" /><input
             type="text"
             class="activity"
-            value="IMNEWRUN Culture, Vision, Mission" /><input type="text" class="location" value="CEO Room" /><input
+            value="Welcome with the CEO" /><input type="text" class="location" value="CEO Room" /><input
             type="text"
             class="lead"
             value="Han-Joo Kim (CEO)" /><button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
@@ -383,10 +383,23 @@
 
       function savePDF() {
         const element = document.getElementById('printArea');
+
+        const name = document.getElementById('employeeName').value || 'Newrun Kim';
+        const date = document.getElementById('startDate').value;
+        const dateObj = new Date(date);
+        const formattedDate =
+          dateObj.getFullYear() +
+          '.' +
+          String(dateObj.getMonth() + 1).padStart(2, '0') +
+          '.' +
+          String(dateObj.getDate()).padStart(2, '0');
+
+        const filename = `[${formattedDate}] First Day Schedule (${name}).pdf`;
+
         html2pdf()
           .set({
             margin: 0,
-            filename: 'First_Day_Schedule.pdf',
+            filename: filename,
             image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 2, scrollY: 0 },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
