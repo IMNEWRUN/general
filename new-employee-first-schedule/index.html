@@ -283,7 +283,7 @@
           <input type="text" class="time" value="11:30 ~" /><input
             type="text"
             class="activity"
-            value="Meet The Team" /><input type="text" class="location" value="Yellow Room" /><input
+            value="Meet The Group" /><input type="text" class="location" value="Yellow Room" /><input
             type="text"
             class="lead"
             placeholder="e.g., Discovery Chemistry"
@@ -324,7 +324,7 @@
         <div class="info-box">
           <div class="info-icon">📅</div>
           <div class="info-text">
-            <div class="info-title" id="displayDate">June 3, 2025 (Tue)</div>
+            <div class="info-title" id="displayDate">Sep 1, 2025 (Mon)</div>
             <div class="info-label">First Workday</div>
           </div>
         </div>
@@ -373,12 +373,22 @@
         const name = document.getElementById('employeeName').value || 'Newrun Kim';
         const team = document.getElementById('teamName').value || 'Discovery Chemistry';
         const date = document.getElementById('startDate').value;
-        const formatted = new Date(date).toLocaleDateString('en-US', {
+
+        const dateObj = new Date(date);
+
+        // 메인 날짜 포맷 (Sep 05, 2025)
+        const mainDate = new Intl.DateTimeFormat('en-US', {
+          month: 'short',
+          day: '2-digit',
           year: 'numeric',
-          month: 'long',
-          day: 'numeric',
+        }).format(dateObj);
+
+        // 요일 포맷 (Fri)
+        const weekday = new Intl.DateTimeFormat('en-US', {
           weekday: 'short',
-        });
+        }).format(dateObj);
+
+        const formatted = `${mainDate} (${weekday})`;
 
         document.getElementById('displayEmployeeName').textContent = name;
         document.getElementById('displayTeamName').textContent = team;
